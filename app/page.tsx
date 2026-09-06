@@ -192,7 +192,7 @@ export default function LoginPage() {
             </form>
           )}
 
-          {role === 'CLIENT' ? (
+          {role === 'CLIENT' && (
             <p className="mt-4 text-center text-xs text-muted-foreground">
               {mode === 'signin' ? 'New to Royal Square? ' : 'Already have an account? '}
               <button
@@ -202,10 +202,6 @@ export default function LoginPage() {
               >
                 {mode === 'signin' ? 'Create an account' : 'Sign in'}
               </button>
-            </p>
-          ) : (
-            <p className="mt-4 text-center text-xs text-muted-foreground">
-              Demo credentials are pre-filled. Just click to sign in.
             </p>
           )}
         </div>
