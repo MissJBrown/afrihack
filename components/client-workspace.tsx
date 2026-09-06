@@ -477,9 +477,15 @@ function DocumentsSection() {
                 <div className="truncate text-sm font-medium">{d.name}</div>
                 <div className="text-xs text-muted-foreground">{d.type} · {d.date} · {d.size}</div>
               </div>
-              <button className="flex items-center gap-1.5 rounded-lg border border-input px-3 py-1.5 text-sm font-medium hover:bg-muted">
+              <a
+                href={d.url ?? '#'}
+                target="_blank"
+                rel="noopener noreferrer"
+                download
+                className="flex items-center gap-1.5 rounded-lg border border-input px-3 py-1.5 text-sm font-medium hover:bg-muted"
+              >
                 <Download className="size-4" /> <span className="hidden sm:inline">Download</span>
-              </button>
+              </a>
             </div>
           ))}
         </div>

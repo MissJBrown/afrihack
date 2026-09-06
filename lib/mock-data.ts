@@ -61,6 +61,7 @@ export type Document = {
   type: string
   date: string
   size: string
+  url?: string
 }
 
 export const PROVIDERS = [
@@ -174,10 +175,11 @@ export const meClaims: Claim[] = [
 ]
 
 export const meDocuments: Document[] = [
-  { id: 'd1', name: 'Motor Policy Schedule 2026', type: 'Policy', date: '2026-01-05', size: '210 KB' },
-  { id: 'd2', name: 'Life Cover Certificate', type: 'Certificate', date: '2025-12-02', size: '180 KB' },
-  { id: 'd3', name: 'Retirement Annuity Statement Q2', type: 'Statement', date: '2026-07-01', size: '340 KB' },
-  { id: 'd4', name: 'IRP5 Tax Certificate 2025/26', type: 'Tax', date: '2026-03-11', size: '96 KB' },
+  { id: 'd1', name: 'FAIS Disclosure Record', type: 'Onboarding', date: '2025-01-11', size: '184 KB', url: '/documents/fais-disclosure.pdf' },
+  { id: 'd2', name: 'Service Level Agreement', type: 'Onboarding', date: '2025-01-16', size: '212 KB', url: '/documents/service-agreement.pdf' },
+  { id: 'd3', name: 'Broker Appointment Notice', type: 'Onboarding', date: '2025-01-03', size: '98 KB', url: '/documents/broker-appointment.pdf' },
+  { id: 'd4', name: 'Client Consent to Obtain Information', type: 'Onboarding', date: '2025-01-04', size: '92 KB', url: '/documents/client-consent.pdf' },
+  { id: 'd5', name: 'Confidentiality Agreement', type: 'Onboarding', date: '2025-01-00', size: '88 KB', url: '/documents/confidentiality-agreement.pdf' },
 ]
 
 export function formatZAR(value: number) {
