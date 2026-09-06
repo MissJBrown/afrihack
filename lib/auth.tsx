@@ -21,6 +21,7 @@ type AuthContextValue = {
   user: SessionUser | null
   ready: boolean
   login: (role: Role) => SessionUser
+  register: (name: string, email: string) => SessionUser
   logout: () => void
 }
 
@@ -63,13 +64,27 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     return session
   }
 
+  // New clients self-register. In production this maps to POST /api/auth/register
+  // (creates the user with role CLIENT, returns a JWT). Here we mint the session
+  // locally so a new sign-up drops straight into the client workspace.
+  function register(name: string, email: string) {
+    const id = `c-${Date.now()}`
+    const token = mintToken({ sub: id, role: 'CLIENT', iat: Date.now() })
+    const session: SessionUser = { id, name, email, role: 'CLIENT', token }
+    setUser(session)
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(session))
+    return session
+  }
+
   function logout() {
     setUser(null)
     localStorage.removeItem(STORAGE_KEY)
   }
 
   return (
-    <AuthContext.Provider value={{ user, ready, login, logout }}>{children}</AuthContext.Provider>
+    <AuthContext.Provider value={{ user, ready, login, register, logout }}>
+      {children}
+    </AuthContext.Provider>
   )
 }
 

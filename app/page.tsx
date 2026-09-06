@@ -8,9 +8,12 @@ import type { Role } from '@/lib/mock-data'
 import { Logo, Wordmark } from '@/components/logo'
 
 export default function LoginPage() {
-  const { user, ready, login } = useAuth()
+  const { user, ready, login, register } = useAuth()
   const router = useRouter()
   const [role, setRole] = useState<Role>('ADVISOR')
+  const [mode, setMode] = useState<'signin' | 'register'>('signin')
+  const [name, setName] = useState('')
+  const [regEmail, setRegEmail] = useState('')
 
   useEffect(() => {
     if (ready && user) {
@@ -24,6 +27,13 @@ export default function LoginPage() {
     e.preventDefault()
     const session = login(role)
     router.replace(session.role === 'ADVISOR' ? '/advisor' : '/client')
+  }
+
+  function handleRegister(e: React.FormEvent) {
+    e.preventDefault()
+    if (!name.trim() || !regEmail.trim()) return
+    register(name.trim(), regEmail.trim())
+    router.replace('/client')
   }
 
   return (
@@ -83,7 +93,10 @@ export default function LoginPage() {
                 <button
                   key={tab.key}
                   type="button"
-                  onClick={() => setRole(tab.key)}
+                  onClick={() => {
+                    setRole(tab.key)
+                    setMode('signin')
+                  }}
                   className={`flex items-center justify-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-colors ${
                     isActive
                       ? 'bg-card text-foreground shadow-sm'
@@ -97,42 +110,104 @@ export default function LoginPage() {
             })}
           </div>
 
-          <form onSubmit={handleSubmit} className="mt-6 space-y-4">
-            <div>
-              <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
-                Email
-              </label>
-              <input
-                id="email"
-                type="email"
-                defaultValue={demoEmail}
-                key={demoEmail}
-                className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
-                Password
-              </label>
-              <input
-                id="password"
-                type="password"
-                defaultValue="demo1234"
-                className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
-              />
-            </div>
-            <button
-              type="submit"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:opacity-90"
-            >
-              Enter {role === 'ADVISOR' ? 'Advisor' : 'Client'} Workspace
-              <ArrowRight className="size-4" />
-            </button>
-          </form>
+          {mode === 'signin' ? (
+            <form onSubmit={handleSubmit} className="mt-6 space-y-4">
+              <div>
+                <label htmlFor="email" className="mb-1.5 block text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  id="email"
+                  type="email"
+                  defaultValue={demoEmail}
+                  key={demoEmail}
+                  className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="password" className="mb-1.5 block text-sm font-medium">
+                  Password
+                </label>
+                <input
+                  id="password"
+                  type="password"
+                  defaultValue="demo1234"
+                  className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+                />
+              </div>
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:opacity-90"
+              >
+                Enter {role === 'ADVISOR' ? 'Advisor' : 'Client'} Workspace
+                <ArrowRight className="size-4" />
+              </button>
+            </form>
+          ) : (
+            <form onSubmit={handleRegister} className="mt-6 space-y-4">
+              <div>
+                <label htmlFor="reg-name" className="mb-1.5 block text-sm font-medium">
+                  Full name
+                </label>
+                <input
+                  id="reg-name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="e.g. Sipho Dlamini"
+                  className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="reg-email" className="mb-1.5 block text-sm font-medium">
+                  Email
+                </label>
+                <input
+                  id="reg-email"
+                  type="email"
+                  value={regEmail}
+                  onChange={(e) => setRegEmail(e.target.value)}
+                  placeholder="you@example.co.za"
+                  className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+                />
+              </div>
+              <div>
+                <label htmlFor="reg-password" className="mb-1.5 block text-sm font-medium">
+                  Password
+                </label>
+                <input
+                  id="reg-password"
+                  type="password"
+                  placeholder="Create a password"
+                  className="w-full rounded-lg border border-input bg-card px-3 py-2.5 text-sm outline-none focus:border-ring focus:ring-2 focus:ring-ring/20"
+                />
+              </div>
+              <button
+                type="submit"
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-primary px-4 py-2.5 text-sm font-semibold text-primary-foreground transition-colors hover:opacity-90"
+              >
+                Create client account
+                <ArrowRight className="size-4" />
+              </button>
+            </form>
+          )}
 
-          <p className="mt-4 text-center text-xs text-muted-foreground">
-            Demo credentials are pre-filled. Just click to sign in.
-          </p>
+          {role === 'CLIENT' ? (
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              {mode === 'signin' ? 'New to Royal Square? ' : 'Already have an account? '}
+              <button
+                type="button"
+                onClick={() => setMode(mode === 'signin' ? 'register' : 'signin')}
+                className="font-semibold text-primary hover:underline"
+              >
+                {mode === 'signin' ? 'Create an account' : 'Sign in'}
+              </button>
+            </p>
+          ) : (
+            <p className="mt-4 text-center text-xs text-muted-foreground">
+              Demo credentials are pre-filled. Just click to sign in.
+            </p>
+          )}
         </div>
       </div>
     </main>
